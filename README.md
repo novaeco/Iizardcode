@@ -1,4 +1,4 @@
-# DevCenter PRO ++
+# DevCenter PRO – Qwen Edition ++
 
 **Outil complet tout-en-un pour projets ESP32, BPI, automation & IA.**
 
