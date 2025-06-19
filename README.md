@@ -33,7 +33,7 @@
 ## Utilisation
 
 1. **Dézippe** le dossier.
-2. **Lance `main_gui`** (double-clic ou `python main.py`).
+2. **Lance `main_gui`** (double-clic ou `python main_gui.py`).
    - Ou build `.exe` via `build_exe.bat` puis exécute dans `/dist`.
 3. **Saisis ta clé OpenAI** dans l’onglet IA pour profiter de l’assistant.
 4. Utilise chaque bouton selon tes besoins.
