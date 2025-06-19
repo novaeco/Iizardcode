@@ -1,25 +1,24 @@
-# DevCenter PRO — Qwen Edition ++
+# DevCenter PRO – Qwen Edition ++
 
-**Outil de développement tout-en-un** pour projets ESP32, BPI, automation et IA.  
-Interface graphique simple, professionnelle, toutes fonctions avancées activées.
+**Outil complet tout-en-un pour projets ESP32, BPI, automation & IA.**
 
 ---
 
 ## Fonctionnalités principales
 
-- Génération automatique de projet ESP32/BPI (template, src/, README.md)
-- Création d’un fichier `.code-workspace` (VSCode)
-- Génération auto de README.md, OpenAPI, CHANGELOG, version.txt
-- Flash ESP32 (détection auto du port COM, bouton unique)
-- Intégration GitHub : commit/push, gestion erreurs, ouverture dépôt d’un clic
-- Gestion multi-profil utilisateur (sauvegarde/bascule, profils illimités)
-- Historique IA local par projet (chaque prompt/réponse sauvegardé)
-- Panneau de logs en direct (statut de chaque action, commandes exécutées)
-- Assistant IA Codex/OpenAI (saisie de prompt, réponse API, sauvegarde)
-- Générateur d’actions CI/CD (GitHub Actions)
-- Auto-installation modules Python (requests, pyserial…)
-- Build .exe universel via `build_exe.bat`
-- **100% autonome, zéro config manuelle**.
+- Génération automatique de projet ESP32/BPI (template)
+- Création fichier `.code-workspace` (VSCode)
+- Génération README.md, OpenAPI, CHANGELOG, version.txt
+- Flash ESP32 (détection auto port COM)
+- Intégration GitHub (push, gestion erreurs, bouton ouvrir dépôt)
+- Gestion multi-profil (sauvegarde/bascule)
+- Historique IA local par projet
+- Panneau de logs en direct
+- Assistant IA Codex/OpenAI : prompt + réponse réelle via API, historique sauvegardé
+- Générateur Actions CI/CD GitHub
+- Auto-installation des modules Python (requests, pyserial…)
+- Build .exe via `build_exe.bat`
+- Interface claire, moderne et évolutive
 
 ---
 
@@ -31,44 +30,23 @@ Interface graphique simple, professionnelle, toutes fonctions avancées activée
 
 ---
 
-## Installation et lancement
-
-1. **Dézippe** le dossier où tu veux.
-2. **Lance `main.py`** (double-clic ou `python main.py`).
-   - Ou lance `build_exe.bat` puis exécute le `.exe` généré dans `/dist`.
-3. **Toutes les dépendances** s’installent automatiquement.
-4. Utilise l’interface (onglets, boutons) pour chaque tâche.
-
----
-
 ## Utilisation
 
-- **Onglet Projet** : génération, workspace, README, OpenAPI, CHANGELOG, flash ESP32, profils, reset git.
-- **Onglet GitHub** : push, ouverture dépôt (modifie l’URL si besoin dans le code).
-- **Onglet IA** : envoie ton prompt, copie/colle ta clé API, récupère la réponse, historique sauvegardé.
-- **Onglet Outils avancés** : menu CI/CD, logs.
+1. **Dézippe** le dossier.
+2. **Lance `main.py`** (double-clic ou `python main.py`).
+   - Ou build `.exe` via `build_exe.bat` puis exécute dans `/dist`.
+3. **Saisis ta clé OpenAI** dans l’onglet IA pour profiter de l’assistant.
+4. Utilise chaque bouton selon tes besoins.
 
 ---
 
-## Options avancées
+## Personnalisation/Extensions
 
-- **Personnalisation UI** : onglets, couleurs, modernisation via ttkbootstrap ou customtkinter.
-- **Ajout de composants hardware :**
-   - Ajoute des callbacks pour piloter GPIO, capteurs, etc.
-   - Branche des drivers LVGL, I2C, UART, etc.
-   - Utilise WSL2 pour lancer des scripts Linux ou toolchains ESP32.
-
----
-
-## Déploiement .EXE
-
-- Lance `build_exe.bat` : tout est compilé, .exe prêt à l’emploi dans `/dist`.
-- L’auto-install fonctionne aussi côté .exe.
+- Tu peux moderniser l’UI avec [ttkbootstrap](https://ttkbootstrap.readthedocs.io/) ou [customtkinter](https://github.com/TomSchimansky/CustomTkinter).
+- Les fonctions hardware/LVGL sont branchables en python ou via port série.
 
 ---
 
 ## Support
 
-Pour toute question, modif ou extension, contacte ton dev/mainteneur (ou l’IA du DevCenter !).
-
----
+Besoin d’aide ? Contacte ton développeur ou l’assistant IA intégré !

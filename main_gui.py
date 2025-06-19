@@ -1,34 +1,24 @@
-import sys, os, datetime, json
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, scrolledtext
-import threading
+import ttkbootstrap as tb
+from ttkbootstrap.constants import *
+from tkinter import messagebox, scrolledtext
+import threading, os, datetime, json
 
-# --- Dépendances non bloquantes : on log au lieu de planter
-try:
-    import requests
-except ImportError:
-    requests = None
-try:
-    import serial.tools.list_ports
-except ImportError:
-    serial = None
+from hardware import send_serial_command
 
-# ---------- FICHIERS ----------
 PROFILES_FILE = "profiles.json"
 HIST_FILE = "historique_ia.json"
 OPENAPI_FILE = "openapi.json"
 
-# ---------- UI PRINCIPALE ----------
 def run_app():
-    app = tk.Tk()
-    app.title("DevCenter PRO (Final, NoFail)")
+    app = tb.Window(themename="darkly")
+    app.title("DevCenter PRO (Modern & Hardware Ready)")
     app.geometry("1200x900")
-    app.configure(bg="#f6f6f8")
+    app.resizable(True, True)
 
     # ----- LOGS -----
-    log_frame = ttk.LabelFrame(app, text="🪵 Logs en direct", padding=10)
+    log_frame = tb.LabelFrame(app, text="🪵 Logs en direct", bootstyle="info")
     log_frame.pack(fill="both", expand=False, padx=10, pady=5)
-    log_box = scrolledtext.ScrolledText(log_frame, height=8, font=("Consolas", 9), state="disabled", bg="#ffffff")
+    log_box = scrolledtext.ScrolledText(log_frame, height=8, font=("Consolas", 9), state="disabled")
     log_box.pack(fill="both", expand=True)
     def add_log(msg):
         now = datetime.datetime.now().strftime('%H:%M:%S')
@@ -38,36 +28,38 @@ def run_app():
         log_box.see("end")
 
     # ----- TABS -----
-    main_frame = ttk.Notebook(app)
+    main_frame = tb.Notebook(app)
     main_frame.pack(fill="both", expand=True, padx=10, pady=5)
-    tab_project = ttk.Frame(main_frame)
-    tab_ia = ttk.Frame(main_frame)
-    tab_git = ttk.Frame(main_frame)
-    tab_tools = ttk.Frame(main_frame)
+    tab_project = tb.Frame(main_frame)
+    tab_ia = tb.Frame(main_frame)
+    tab_git = tb.Frame(main_frame)
+    tab_tools = tb.Frame(main_frame)
     main_frame.add(tab_project, text="📦 Projet")
     main_frame.add(tab_ia, text="🤖 Assistant IA")
     main_frame.add(tab_git, text="📤 GitHub")
     main_frame.add(tab_tools, text="🛠️ Outils avancés")
 
-    # ---------- FONCTIONS (SÛRES) ----------
-
+    # ---------- Fonctions Projet ----------
     def detect_com():
-        if serial is None:
-            add_log("[ERR] pyserial absent, COM indisponible")
+        try:
+            import serial.tools.list_ports
+            ports = list(serial.tools.list_ports.comports())
+            if not ports:
+                add_log("[ERR] Aucun port COM détecté")
+                messagebox.showwarning("ESP32", "Aucun port COM détecté !")
+                return None
+            add_log(f"[OK] Port détecté : {ports[0].device}")
+            return ports[0].device
+        except Exception as e:
+            add_log(f"[ERR] pyserial absent ou erreur : {e}")
             messagebox.showwarning("ESP32", "pyserial n'est pas installé !")
             return None
-        ports = list(serial.tools.list_ports.comports())
-        if not ports:
-            add_log("[ERR] Aucun port COM détecté")
-            messagebox.showwarning("ESP32", "Aucun port COM détecté !")
-            return None
-        add_log(f"[OK] Port détecté : {ports[0].device}")
-        return ports[0].device
 
     def flash_esp32():
         port = detect_com()
         if not port:
             return
+        # Exemple : simule un flash, à adapter avec ta commande
         add_log(f"[FLASH] (Fake) Flash ESP32 sur {port}")
         messagebox.showinfo("Flash ESP32", f"Flash simulé sur : {port}")
 
@@ -151,46 +143,71 @@ def run_app():
         with open(HIST_FILE, "w", encoding="utf-8") as f:
             json.dump(history, f, indent=2)
 
-    # ---------- UI -----------
-
-    proj_frame = ttk.LabelFrame(tab_project, text="Actions Projet", padding=10)
+    # ---------- UI Projet ----------
+    proj_frame = tb.LabelFrame(tab_project, text="Actions Projet", bootstyle="primary")
     proj_frame.pack(fill="x", padx=10, pady=10)
-    ttk.Button(proj_frame, text="Générer Projet", command=generate_project).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Créer .code-workspace", command=generate_workspace).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Générer README.md", command=generate_project).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Générer OpenAPI", command=generate_openapi).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Générer CHANGELOG / version", command=generate_changelog).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Flasher ESP32 (auto COM)", command=flash_esp32).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Sauver Profil", command=lambda: save_profile("Default")).pack(fill="x", pady=2)
-    ttk.Button(proj_frame, text="Réinitialiser Git", command=reset_git).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Générer Projet", command=generate_project, bootstyle="success-outline").pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Créer .code-workspace", command=generate_workspace).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Générer README.md", command=generate_project).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Générer OpenAPI", command=generate_openapi).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Générer CHANGELOG / version", command=generate_changelog).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Flasher ESP32 (auto COM)", command=flash_esp32, bootstyle="warning-outline").pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Sauver Profil", command=lambda: save_profile("Default")).pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="Réinitialiser Git", command=reset_git).pack(fill="x", pady=2)
+    # --------- LVGL/HARDWARE --------
+    tb.Button(proj_frame, text="LVGL Home", command=lambda: send_serial_command("LVGL:HOME"), bootstyle="info-outline").pack(fill="x", pady=2)
+    tb.Button(proj_frame, text="LVGL Next", command=lambda: send_serial_command("LVGL:NEXT")).pack(fill="x", pady=2)
 
-    git_frame = ttk.LabelFrame(tab_git, text="Gestion GitHub", padding=10)
+    # ---------- UI Git ----------
+    git_frame = tb.LabelFrame(tab_git, text="Gestion GitHub", bootstyle="secondary")
     git_frame.pack(fill="x", padx=10, pady=10)
-    ttk.Button(git_frame, text="Push GitHub", command=push_github).pack(fill="x", pady=2)
-    ttk.Button(git_frame, text="Ouvrir Page GitHub", command=open_github_repo).pack(fill="x", pady=2)
+    tb.Button(git_frame, text="Push GitHub", command=push_github).pack(fill="x", pady=2)
+    tb.Button(git_frame, text="Ouvrir Page GitHub", command=open_github_repo).pack(fill="x", pady=2)
 
-    ia_frame = ttk.LabelFrame(tab_ia, text="Assistant IA (OpenAI Codex)", padding=10)
+    # ---------- UI IA (OpenAI réelle) ----------
+    ia_frame = tb.LabelFrame(tab_ia, text="Assistant IA (OpenAI Codex)", bootstyle="success")
     ia_frame.pack(fill="x", padx=10, pady=10)
 
-    prompt_entry = ttk.Entry(ia_frame, width=70)
+    api_key_entry = tb.Entry(ia_frame, width=60, show="*")
+    api_key_entry.insert(0, "sk-...") # Mets ta clé ici ou saisis-la dans l’UI
+    api_key_entry.pack(side="top", padx=2, pady=2)
+
+    prompt_entry = tb.Entry(ia_frame, width=70)
     prompt_entry.pack(side="left", padx=2, pady=2)
     def call_ia():
         prompt = prompt_entry.get()
-        if not prompt:
+        api_key = api_key_entry.get()
+        if not prompt or not api_key:
+            messagebox.showerror("Erreur", "Prompt ou clé API manquant !")
             return
-        response = "[Simulation IA] Réponse à : " + prompt
+        try:
+            import requests
+            url = "https://api.openai.com/v1/chat/completions"
+            headers = {"Authorization": f"Bearer {api_key}"}
+            data = {
+                "model": "gpt-3.5-turbo",
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 100
+            }
+            r = requests.post(url, headers=headers, json=data)
+            result = r.json()
+            if "error" in result:
+                raise Exception(result["error"]["message"])
+            response = result["choices"][0]["message"]["content"]
+        except Exception as e:
+            response = f"[Erreur API] {e}"
         save_ia_history(prompt, response)
         add_log(f"[IA] {response}")
         messagebox.showinfo("Réponse IA", response)
-    ttk.Button(ia_frame, text="Prompt IA", command=call_ia).pack(side="left", padx=2, pady=2)
+    tb.Button(ia_frame, text="Prompt IA (API OpenAI)", command=call_ia, bootstyle="success-outline").pack(side="left", padx=2, pady=2)
 
-    tools_frame = ttk.LabelFrame(tab_tools, text="Outils avancés", padding=10)
+    # ---------- UI Outils avancés ----------
+    tools_frame = tb.LabelFrame(tab_tools, text="Outils avancés", bootstyle="warning")
     tools_frame.pack(fill="x", padx=10, pady=10)
-    ttk.Button(tools_frame, text="Menu GitHub Actions CI/CD", command=lambda: add_log("[CI/CD] Menu lancé")).pack(fill="x", pady=2)
+    tb.Button(tools_frame, text="Menu GitHub Actions CI/CD", command=lambda: add_log("[CI/CD] Menu lancé")).pack(fill="x", pady=2)
 
-    add_log("DevCenter PRO initialisé. Toutes fonctions actives.")
+    add_log("DevCenter PRO initialisé. UI moderne + hardware + IA.")
     app.mainloop()
 
-# ----- Lancement asynchrone pour que la fenêtre s'affiche TOUJOURS -----
 if __name__ == "__main__":
     threading.Thread(target=run_app).start()
