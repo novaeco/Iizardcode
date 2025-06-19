@@ -98,7 +98,7 @@ Modifier
 ## 👨‍💻 Développé par
 
 > NovaDevSysthem  
-> Contact : [Ton mail ou site]  
+>
 > Dépôt officiel : https://github.com/novaeco/Iizardcode.git  
 >  
 > _Version 2025, tous droits réservés._
