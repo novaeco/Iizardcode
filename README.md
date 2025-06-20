@@ -99,9 +99,9 @@ Modifier
 
 > NovaDevSysthem  
 >
-> Dépôt officiel : https://github.com/novaeco/Iizardcode.git  
+> Dépôt officiel : https://github.com/novaeco/Iizardcode.git
 >  
-> _Version 2025, tous droits réservés._
+> _Version  2025, tous droits réservés._
 
 ---
 
