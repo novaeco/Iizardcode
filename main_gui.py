@@ -165,6 +165,17 @@ def generate_project():
         f.write("# Projet ESP32/BPI généré par DevCenter\n")
     return "[OK] Projet ESP32/BPI généré."
 
+def generate_readme():
+    """Créer uniquement le fichier README.md pour le projet."""
+    content = [
+        "# Projet généré avec DevCenter PRO\n",
+        "\n",
+        "Ce fichier README a été généré automatiquement.\n",
+    ]
+    with open("README.md", "w", encoding="utf-8") as f:
+        f.writelines(content)
+    return "[OK] README.md généré."
+
 def generate_workspace():
     ws = {"folders": [{"path": "."}], "settings": {}}
     with open(".code-workspace", "w", encoding="utf-8") as f:
@@ -314,7 +325,7 @@ def run_app():
     tb.Label(projet_panel, text="🗂️ Génération & gestion du projet", font=("Segoe UI", 15, "bold")).pack(pady=14)
     tb.Button(projet_panel, text="🛠️ Générer Projet", command=lambda: add_log(generate_project()), bootstyle="success-outline").pack(fill="x", padx=120, pady=3)
     tb.Button(projet_panel, text="📁 Créer .code-workspace", command=lambda: add_log(generate_workspace())).pack(fill="x", padx=120, pady=3)
-    tb.Button(projet_panel, text="📖 Générer README.md", command=lambda: add_log(generate_project())).pack(fill="x", padx=120, pady=3)
+    tb.Button(projet_panel, text="📖 Générer README.md", command=lambda: add_log(generate_readme())).pack(fill="x", padx=120, pady=3)
     tb.Button(projet_panel, text="📘 Générer OpenAPI", command=lambda: add_log(generate_openapi())).pack(fill="x", padx=120, pady=3)
     tb.Button(projet_panel, text="📝 Générer CHANGELOG / version", command=lambda: add_log(generate_changelog())).pack(fill="x", padx=120, pady=3)
     tb.Button(projet_panel, text="⚡ Flasher ESP32 (auto COM)", command=lambda: add_log(flash_esp32()), bootstyle="warning-outline").pack(fill="x", padx=120, pady=3)
