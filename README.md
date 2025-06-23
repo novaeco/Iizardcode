@@ -47,13 +47,10 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 - Installe Python : https://www.python.org/downloads/
 - Puis, dans le dossier :
     ```bash
-    pip install ttkbootstrap
+    pip install -r requirements.txt
     python main.py
     ```
-- **Optionnel** : Installe `pyserial` si tu veux la détection de port COM pour ESP32 :  
-    ```bash
-    pip install pyserial
-    ```
+La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `pyserial` déjà listé dans `requirements.txt`.
 
 ---
 
