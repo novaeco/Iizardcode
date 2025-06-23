@@ -6,7 +6,7 @@ import threading, os, datetime, json
 PROFILES_FILE = "profiles.json"
 HIST_FILE = "historique_ia.json"
 OPENAPI_FILE = "openapi.json"
-AGENTS_FILE = "agents.json"
+AGENTS_FILE = "dist/agents.json"
 THEMES = [
     "darkly", "flatly", "cyborg", "superhero", "minty", "journal", "yeti"
 ]
@@ -22,6 +22,7 @@ def load_agents():
         return json.load(f)
 
 def save_agents(agents):
+    os.makedirs(os.path.dirname(AGENTS_FILE) or ".", exist_ok=True)
     with open(AGENTS_FILE, "w", encoding="utf-8") as f:
         json.dump(agents, f, indent=2, ensure_ascii=False)
 
