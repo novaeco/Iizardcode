@@ -25,13 +25,13 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 ## 🏷️ Personnalisation
 
 - **Logo personnalisable** :  
-    - Remplace `logo.ico` par ton icône, ou modifie la ligne dans `main.py` :  
+    - Remplace `logo.ico` par ton icône, ou modifie la ligne dans `main_gui.py` :  
       ```python
       app.iconbitmap('logo.ico')  # Change le nom ici si besoin
       ```
     - Ajoute un logo dans le README via `![Logo](tonlogo.png)` si tu préfères un PNG (et update le chemin)
 - **Branding** :  
-    - Change la bannière de l’UI dans `main.py`  
+    - Change la bannière de l’UI dans `main_gui.py`  
     - Ajoute ton nom dans le footer, et dans ce README  
     - Modifie l’URL du dépôt si besoin
 
@@ -48,7 +48,7 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 - Puis, dans le dossier :
     ```bash
     pip install -r requirements.txt
-    python main.py
+    python main_gui.py
     ```
 La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `pyserial` déjà listé dans `requirements.txt`.
 
@@ -57,7 +57,7 @@ La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `py
 ## 📂 Structure
 
 DevCenter/
-├── main.py
+├── main_gui.py
 ├── logo.ico # Ton logo, à personnaliser !
 ├── agents.json
 ├── [autres fichiers]
