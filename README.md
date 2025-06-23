@@ -59,7 +59,7 @@ La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `py
 DevCenter/
 ├── main_gui.py
 ├── logo.ico # Ton logo, à personnaliser !
-├── agents.json
+├── dist/agents.json
 ├── [autres fichiers]
 
 yaml
