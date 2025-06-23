@@ -33,7 +33,7 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 - **Branding** :  
     - Change la bannière de l’UI dans `main_gui.py`  
     - Ajoute ton nom dans le footer, et dans ce README  
-    - Modifie l’URL du dépôt si besoin
+    - Personnalise l’URL du dépôt via `github_repo_url` dans `config.json` pour le bouton "Ouvrir Page GitHub"
 
 ---
 
@@ -59,6 +59,15 @@ Renseigne la clé dans `config.json` :
 ```json
 {
   "openai_api_key": "sk-..."
+}
+```
+
+Pour personnaliser le bouton "Ouvrir Page GitHub", ajoute la clé `github_repo_url` :
+
+```json
+{
+  "openai_api_key": "sk-...",
+  "github_repo_url": "https://github.com/moncompte/mondepot"
 }
 ```
 

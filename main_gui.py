@@ -245,8 +245,16 @@ def reset_git():
 def push_github():
     return "[GIT] Simu push (à brancher sur Git réel)"
 
-def open_github_repo():
-    url = "https://github.com/TON-UTILISATEUR/TON-DEPOT"
+def open_github_repo(url=None):
+    """Ouvre le dépôt GitHub défini dans config.json ou celui passé en param."""
+    if url is None:
+        try:
+            with open("config.json", "r", encoding="utf-8") as f:
+                url = json.load(f).get("github_repo_url")
+        except Exception:
+            url = None
+    if not url:
+        url = "https://github.com/TON-UTILISATEUR/TON-DEPOT"
     import webbrowser
     webbrowser.open(url)
     return "[GIT] Ouverture page GitHub."
