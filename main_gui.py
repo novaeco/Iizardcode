@@ -3,7 +3,8 @@ from ttkbootstrap.constants import *
 from tkinter import messagebox, scrolledtext
 import threading, os, datetime, json
 from project_utils import generate_project, generate_readme, generate_workspace, generate_openapi, generate_changelog, flash_esp32, reset_git, push_github, open_github_repo, save_profile, ask_openai
-AGENTS_FILE = "dist/agents.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+AGENTS_FILE = os.path.join(BASE_DIR, "dist", "agents.json")
 
 THEMES = [
     "darkly", "flatly", "cyborg", "superhero", "minty", "journal", "yeti"
