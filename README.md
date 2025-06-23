@@ -79,6 +79,15 @@ export OPENAI_API_KEY="sk-..."
 
 Si les dépendances ne sont pas installées, l'exécution renverra l'erreur `ModuleNotFoundError: openai`.
 
+## 🧪 Tests
+
+Depuis la racine du projet :
+```bash
+pip install -r requirements.txt
+pytest
+```
+
+
 ---
 
 ## 📂 Structure
