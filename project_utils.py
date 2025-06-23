@@ -1,7 +1,10 @@
 import os
 import json
 import datetime
-import openai
+try:
+    import openai
+except ImportError:  # pragma: no cover - optional dependency
+    openai = None
 import webbrowser
 
 PROFILES_FILE = "profiles.json"
@@ -125,6 +128,8 @@ def save_ia_history(prompt, response):
 
 def ask_openai(prompt):
     """Envoie le prompt à l'API OpenAI et renvoie la réponse."""
+    if openai is None:  # pragma: no cover - optional dependency
+        raise RuntimeError("Module 'openai' non installé")
     try:
         with open("config.json", "r", encoding="utf-8") as f:
             config = json.load(f)

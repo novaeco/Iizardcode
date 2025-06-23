@@ -5,7 +5,7 @@ a = Analysis(
     ['main_gui.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('dist/agents.json', 'dist')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
