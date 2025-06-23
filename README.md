@@ -52,6 +52,24 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
     ```
 La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `pyserial` déjà listé dans `requirements.txt`.
 
+## 🔑 Configuration de la clé API OpenAI
+
+Renseigne la clé dans `config.json` :
+
+```json
+{
+  "openai_api_key": "sk-..."
+}
+```
+
+Tu peux aussi définir une variable d'environnement :
+
+```bash
+export OPENAI_API_KEY="sk-..."
+```
+
+Si les dépendances ne sont pas installées, l'exécution renverra l'erreur `ModuleNotFoundError: openai`.
+
 ---
 
 ## 📂 Structure
