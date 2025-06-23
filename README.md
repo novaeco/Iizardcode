@@ -19,6 +19,7 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 - **GitHub intégré** : push, ouverture, reset Git, gestion Actions CI/CD
 - **Documentation automatique** : README.md, OpenAPI, CHANGELOG…
 - **Logs en direct** (toutes actions projet, IA, flash, build…)
+- **Support multi-carte** : ESP32, ESP32‑C6, ESP32‑P4, Raspberry Pi, BPI (voir le dossier `cartes/`)
 
 ---
 
@@ -96,6 +97,12 @@ DevCenter/
 ├── main_gui.py
 ├── logo.ico # Ton logo, à personnaliser !
 ├── dist/agents.json
+├── cartes/
+│   ├── esp32/
+│   ├── esp32_c6/
+│   ├── esp32_p4/
+│   ├── raspberry_pi/
+│   └── bpi/
 ├── [autres fichiers]
 
 yaml

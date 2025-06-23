@@ -14,9 +14,38 @@ IA_SOURCES = [
     "ChatGPT", "Codex", "Bolt", "Mistral", "Gemini"
 ]
 
+# Liste d'agents IA fournie par défaut
+DEFAULT_AGENTS = [
+    {"name": "Orchestrateur Principal", "role": "orchestrator", "icon": "🚦", "active": True, "ia_source": "ChatGPT"},
+    {"name": "UpdateAgent", "role": "update", "icon": "🔄", "active": False, "ia_source": "ChatGPT"},
+    {"name": "TestAgent", "role": "test", "icon": "🧪", "active": False, "ia_source": "ChatGPT"},
+    {"name": "BuildAgent", "role": "build", "icon": "🔧", "active": False, "ia_source": "ChatGPT"},
+    {"name": "SecurityAgent", "role": "security", "icon": "🛡️", "active": False, "ia_source": "ChatGPT"},
+    {"name": "CloudAgent", "role": "cloud", "icon": "☁️", "active": False, "ia_source": "ChatGPT"},
+    {"name": "MaintenanceAgent", "role": "maintenance", "icon": "🧹", "active": False, "ia_source": "ChatGPT"},
+    {"name": "Observer / MetricsAgent", "role": "observer", "icon": "📊", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent UI/UX Full Stack", "role": "uiux", "icon": "🎨", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent LVGL Full Stack", "role": "lvgl", "icon": "📱", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent JS/TS Full Stack", "role": "js", "icon": "📜", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Python Full Stack", "role": "python", "icon": "🐍", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Go Full Stack", "role": "go", "icon": "🐹", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Rust Full Stack", "role": "rust", "icon": "🦀", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Java Full Stack", "role": "java", "icon": "☕", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent C/C++ Full Stack", "role": "cpp", "icon": "⚙️", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent C#/.NET Full Stack", "role": "csharp", "icon": "🎯", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent PHP Full Stack", "role": "php", "icon": "🐘", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Ruby Full Stack", "role": "ruby", "icon": "💎", "active": False, "ia_source": "ChatGPT"},
+    {"name": "DevAgent Assembly Full Stack", "role": "asm", "icon": "⚙️", "active": False, "ia_source": "ChatGPT"},
+    {"name": "Agent Provisioning & Setup (Provisioner)", "role": "provision", "icon": "🛠️", "active": False, "ia_source": "ChatGPT"},
+    {"name": "Agent Déploiement & Infrastructure (Deployer)", "role": "deploy", "icon": "🚀", "active": False, "ia_source": "ChatGPT"},
+    {"name": "Agent de Documentation & Assistance (DocAgent)", "role": "doc", "icon": "📚", "active": False, "ia_source": "ChatGPT"},
+    {"name": "Agent de Collaboration (CollabAgent)", "role": "collab", "icon": "🤝", "active": False, "ia_source": "ChatGPT"}
+]
+
 def load_agents():
     if not os.path.exists(AGENTS_FILE):
-        return []
+        save_agents(DEFAULT_AGENTS)
+        return DEFAULT_AGENTS
     with open(AGENTS_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
