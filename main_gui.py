@@ -2,6 +2,7 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from tkinter import messagebox, scrolledtext
 import threading, os, datetime, json
+import openai
 
 PROFILES_FILE = "profiles.json"
 HIST_FILE = "historique_ia.json"
@@ -59,7 +60,7 @@ def create_or_edit_agent_window(parent, on_saved, agent=None):
         top.destroy()
     tb.Button(top, text="Enregistrer", command=submit, bootstyle="success").pack(pady=10)
 
-def ia_tab_panel(parent):
+def ia_tab_panel(parent, add_log):
     frame = tb.Frame(parent)
     agents = load_agents()
 
@@ -155,6 +156,25 @@ def ia_tab_panel(parent):
         elif section.get() == "params":
             refresh_params()
     refresh_body()
+
+    chat_frame = tb.Labelframe(frame, text="💬 Envoyer un prompt")
+    chat_frame.pack(fill="x", padx=7, pady=(0, 8))
+    prompt_entry = tb.Entry(chat_frame)
+    prompt_entry.pack(side="left", fill="x", expand=True, padx=4, pady=4)
+
+    def send_prompt():
+        prompt = prompt_entry.get().strip()
+        if not prompt:
+            messagebox.showwarning("Prompt vide", "Saisissez un prompt.")
+            return
+        try:
+            response = ask_openai(prompt)
+            add_log(f"[IA] {response}")
+        except Exception as e:
+            add_log(str(e))
+
+    tb.Button(chat_frame, text="Envoyer", command=send_prompt, bootstyle="primary").pack(side="left", padx=4, pady=4)
+
     return frame
 # --- AUTRES MODULES / OUTILS ---
 def generate_project():
@@ -252,6 +272,25 @@ def save_ia_history(prompt, response):
     with open(HIST_FILE, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2)
 
+def ask_openai(prompt):
+    """Envoie le prompt à l'API OpenAI et renvoie la réponse."""
+    try:
+        with open("config.json", "r", encoding="utf-8") as f:
+            config = json.load(f)
+        api_key = config.get("openai_api_key")
+        if not api_key:
+            raise RuntimeError("Clé API OpenAI manquante")
+        openai.api_key = api_key
+        resp = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        answer = resp.choices[0].message.content.strip()
+        save_ia_history(prompt, answer)
+        return answer
+    except Exception as e:
+        raise RuntimeError(f"Erreur réseau/IA : {e}")
+
 def run_app():
     themename = "darkly"
     app = tb.Window(themename=themename)
@@ -336,7 +375,7 @@ def run_app():
     nav["projet"] = projet_panel
 
     # --- NOUVEAU PANEL IA : barre navigation & options ---
-    nav["ia"] = ia_tab_panel(content)
+    nav["ia"] = ia_tab_panel(content, add_log)
 
     git_panel = tb.Frame(content)
     tb.Label(git_panel, text="🌐 Intégration GitHub", font=("Segoe UI", 15, "bold")).pack(pady=14)
