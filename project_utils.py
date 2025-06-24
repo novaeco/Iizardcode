@@ -142,6 +142,7 @@ def load_profile(profile_name="Default"):
         profiles = json.load(f)
     return profiles.get(profile_name)
 
+
 def list_profiles():
     """Return the list of saved profile names."""
     if not os.path.exists(PROFILES_FILE):

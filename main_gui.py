@@ -20,12 +20,12 @@ from project_utils import (
     reset_git,
     save_profile,
     load_profile,
- uq02yo-codex/analyser-le-dépôt-et-proposer-des-améliorations
+
     list_profiles,
     load_config,
     save_config,
     HIST_FILE,
-n
+
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -700,6 +700,7 @@ def run_app():
         else:
             profiles_var.set("")
 
+
     tb.Button(
         projet_panel,
         text="💾 Sauver Profil",
@@ -719,20 +720,7 @@ def run_app():
     tb.Button(
         projet_panel, text="📂 Charger Profil", command=load_selected_profile
     ).pack(fill="x", padx=120, pady=3)
-
     refresh_profiles()
-
-
-    def load_selected_profile():
-        prof = load_profile()
-        if prof is None:
-            messagebox.showinfo("Profil", "Aucun profil sauvegardé")
-        else:
-            messagebox.showinfo("Profil", f"Profil chargé : {prof}")
-
-    tb.Button(
-        projet_panel, text="📂 Charger Profil", command=load_selected_profile
-    ).pack(fill="x", padx=120, pady=3)
 
     tb.Button(
         projet_panel, text="🧹 Réinitialiser Git", command=lambda: add_log(reset_git())
