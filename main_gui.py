@@ -43,6 +43,7 @@ DEFAULT_AGENTS = [
 ]
 
 def load_agents():
+    """Load the list of AI agents from disk, creating defaults if needed."""
     if not os.path.exists(AGENTS_FILE):
         save_agents(DEFAULT_AGENTS)
         return DEFAULT_AGENTS
@@ -50,11 +51,13 @@ def load_agents():
         return json.load(f)
 
 def save_agents(agents):
+    """Persist the given agents configuration to disk."""
     os.makedirs(os.path.dirname(AGENTS_FILE) or ".", exist_ok=True)
     with open(AGENTS_FILE, "w", encoding="utf-8") as f:
         json.dump(agents, f, indent=2, ensure_ascii=False)
 
 def create_or_edit_agent_window(parent, on_saved, agent=None):
+    """Open a small dialog to create or edit an AI agent."""
     top = tb.Toplevel(parent)
     top.title("Configurer Agent IA" if agent else "Créer un nouvel Agent IA")
     tb.Label(top, text="Nom de l’agent :").pack(pady=5)
@@ -88,6 +91,7 @@ def create_or_edit_agent_window(parent, on_saved, agent=None):
     tb.Button(top, text="Enregistrer", command=submit, bootstyle="success").pack(pady=10)
 
 def ia_tab_panel(parent, add_log):
+    """Return the IA management panel widget."""
     frame = tb.Frame(parent)
     agents = load_agents()
 
@@ -204,6 +208,7 @@ def ia_tab_panel(parent, add_log):
 
     return frame
 def run_app():
+    """Launch the graphical interface."""
     themename = "darkly"
     app = tb.Window(themename=themename)
     app.title("DevCenter PRO – Ultimate UI")
