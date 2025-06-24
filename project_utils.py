@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+
 try:
     import openai
 except ImportError:  # pragma: no cover - optional dependency
@@ -47,7 +48,7 @@ def generate_openapi():
     openapi = {
         "openapi": "3.0.0",
         "info": {"title": "DevCenter API", "version": "1.0.0"},
-        "paths": {}
+        "paths": {},
     }
     with open(OPENAPI_FILE, "w", encoding="utf-8") as f:
         json.dump(openapi, f, indent=2)
@@ -67,6 +68,7 @@ def detect_com():
     """Return the first available serial port if any."""
     try:
         import serial.tools.list_ports
+
         ports = list(serial.tools.list_ports.comports())
         if not ports:
             return None, "[ERR] Aucun port COM détecté"
@@ -87,6 +89,7 @@ def reset_git():
     """Remove any existing Git repository and reinitialise it."""
     if os.path.isdir(".git"):
         import shutil
+
         shutil.rmtree(".git")
     os.system("git init")
     return "[GIT] Dépôt Git réinitialisé."
@@ -117,9 +120,7 @@ def save_profile(profile_name="Default"):
     if os.path.exists(PROFILES_FILE):
         with open(PROFILES_FILE, "r", encoding="utf-8") as f:
             profiles = json.load(f)
-    profiles[profile_name] = {
-        "date": datetime.datetime.now().isoformat()
-    }
+    profiles[profile_name] = {"date": datetime.datetime.now().isoformat()}
     with open(PROFILES_FILE, "w", encoding="utf-8") as f:
         json.dump(profiles, f, indent=2)
     return f"[PROFIL] Profil '{profile_name}' sauvegardé."
@@ -148,12 +149,10 @@ def ask_openai(prompt):
             raise RuntimeError("Clé API OpenAI manquante")
         openai.api_key = api_key
         resp = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+            model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
         )
         answer = resp.choices[0].message.content.strip()
         save_ia_history(prompt, answer)
         return answer
     except Exception as e:
         raise RuntimeError(f"Erreur réseau/IA : {e}")
-
