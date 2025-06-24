@@ -100,3 +100,87 @@ def test_ask_openai_missing_key(tmp_path, monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(RuntimeError):
         project_utils.ask_openai("Hello")
+
+
+def _patch_serial(monkeypatch, ports):
+    import types
+    lp = types.SimpleNamespace(comports=lambda: ports)
+    tools = types.SimpleNamespace(list_ports=lp)
+    serial_mod = types.SimpleNamespace(tools=tools)
+    monkeypatch.setitem(sys.modules, "serial", serial_mod)
+    monkeypatch.setitem(sys.modules, "serial.tools", tools)
+    monkeypatch.setitem(sys.modules, "serial.tools.list_ports", lp)
+
+
+def test_detect_com_found(monkeypatch):
+    class Port: device = "COM1"
+    _patch_serial(monkeypatch, [Port()])
+    port, msg = project_utils.detect_com()
+    assert port == "COM1"
+    assert "[OK] Port détecté : COM1" == msg
+
+
+def test_detect_com_missing(monkeypatch):
+    _patch_serial(monkeypatch, [])
+    port, msg = project_utils.detect_com()
+    assert port is None
+    assert msg.startswith("[ERR] Aucun port COM")
+
+
+def test_flash_esp32(monkeypatch):
+    class Port: device = "COM3"
+    _patch_serial(monkeypatch, [Port()])
+    res = project_utils.flash_esp32()
+    assert res == "[FLASH] (Fake) Flash ESP32 sur COM3"
+
+
+def test_flash_esp32_no_port(monkeypatch):
+    _patch_serial(monkeypatch, [])
+    res = project_utils.flash_esp32()
+    assert res.startswith("[ERR] Aucun port COM")
+
+
+def test_reset_git(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    calls = []
+    monkeypatch.setattr(os, "system", lambda cmd: calls.append(cmd))
+    msg = project_utils.reset_git()
+    assert msg == "[GIT] Dépôt Git réinitialisé."
+    assert calls == ["git init"]
+
+
+def test_push_github(monkeypatch):
+    calls = []
+    monkeypatch.setattr(os, "system", lambda cmd: calls.append(cmd))
+    msg = project_utils.push_github()
+    assert msg.startswith("[GIT] Simu push")
+    assert calls == []
+
+
+def test_open_github_repo(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    with open("config.json", "w", encoding="utf-8") as f:
+        json.dump({"github_repo_url": "http://ex"}, f)
+    opened = []
+    monkeypatch.setattr(project_utils.webbrowser, "open", lambda url: opened.append(url))
+    msg = project_utils.open_github_repo()
+    assert msg == "[GIT] Ouverture page GitHub."
+    assert opened == ["http://ex"]
+
+
+def test_ask_openai_success(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open("config.json", "w", encoding="utf-8") as f:
+        json.dump({"openai_api_key": "KEY"}, f)
+    class Dummy(DummyOpenAI):
+        pass
+    called = []
+    def create(model, messages):
+        called.append(messages[0]["content"])
+        return DummyResp("resp")
+    Dummy.ChatCompletion.create = staticmethod(create)
+    monkeypatch.setattr(project_utils, "openai", Dummy)
+    resp = project_utils.ask_openai("Hi")
+    assert resp == "resp"
+    assert Dummy.api_key == "KEY"
+    assert called == ["Hi"]
