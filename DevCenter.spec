@@ -5,7 +5,7 @@ a = Analysis(
     ['main_gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('dist/agents.json', 'dist')],
+    datas=[('dist/agents.json', 'dist'), ('img-font.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

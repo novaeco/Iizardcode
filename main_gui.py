@@ -1,6 +1,6 @@
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
-from tkinter import messagebox, scrolledtext
+from tkinter import messagebox, scrolledtext, PhotoImage
 import datetime
 import json
 import os
@@ -476,6 +476,13 @@ def run_app():
         font=("Segoe UI", 10),
         bootstyle="inverse-secondary",
     ).pack(pady=(0, 18))
+
+    # Image demo des polices
+    img_path = os.path.join(BASE_DIR, "img-font.png")
+    if os.path.exists(img_path):
+        img_font = PhotoImage(file=img_path)
+        tb.Label(sidebar, image=img_font).pack(pady=(0, 15))
+        sidebar.img_font = img_font  # reference
     # Sélecteur de thème
     tb.Label(
         sidebar,
@@ -568,6 +575,10 @@ def run_app():
     tb.Label(
         accueil_panel, text="Choisissez une section à gauche.", font=("Segoe UI", 13)
     ).pack()
+    if os.path.exists(img_path):
+        img_font_accueil = PhotoImage(file=img_path)
+        tb.Label(accueil_panel, image=img_font_accueil).pack(pady=10)
+        accueil_panel.img_font = img_font_accueil
     nav["accueil"] = accueil_panel
 
     projet_panel = tb.Frame(content)
