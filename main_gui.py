@@ -28,6 +28,31 @@ THEMES = ["darkly", "flatly", "cyborg", "superhero", "minty", "journal", "yeti"]
 
 IA_SOURCES = ["ChatGPT", "Codex", "Bolt", "Mistral", "Gemini"]
 
+
+# Helpers
+def is_openai_configured():
+    """Return True if an OpenAI API key is configured."""
+    try:
+        with open("config.json", "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+        return bool(cfg.get("openai_api_key") or os.getenv("OPENAI_API_KEY"))
+    except Exception:
+        return False
+
+
+def send_prompt_thread(prompt, add_log):
+    """Send a prompt using ask_openai in a background thread."""
+
+    def worker():
+        try:
+            response = ask_openai(prompt)
+            add_log(f"[IA] {response}")
+        except Exception as e:
+            add_log(str(e))
+
+    threading.Thread(target=worker, daemon=True).start()
+
+
 # Liste d'agents IA fournie par défaut
 DEFAULT_AGENTS = [
     {
@@ -430,14 +455,7 @@ def ia_tab_panel(parent, add_log):
             messagebox.showwarning("Prompt vide", "Saisissez un prompt.")
             return
 
-        def worker():
-            try:
-                response = ask_openai(prompt)
-                add_log(f"[IA] {response}")
-            except Exception as e:
-                add_log(str(e))
-
-        threading.Thread(target=worker, daemon=True).start()
+        send_prompt_thread(prompt, add_log)
 
     tb.Button(
         chat_frame, text="Envoyer", command=send_prompt, bootstyle="primary"
@@ -583,6 +601,26 @@ def run_app():
         img_font_accueil = PhotoImage(file=img_path)
         tb.Label(accueil_panel, image=img_font_accueil).pack(pady=10)
         accueil_panel.img_font = img_font_accueil
+    # Quick prompt section on home
+    chat_home = tb.Labelframe(accueil_panel, text="💬 Prompt rapide")
+    prompt_home = tb.Entry(chat_home)
+    prompt_home.pack(side="left", fill="x", expand=True, padx=4, pady=4)
+
+    def send_home_prompt():
+        prompt = prompt_home.get().strip()
+        if not prompt:
+            messagebox.showwarning("Prompt vide", "Saisissez un prompt.")
+            return
+        send_prompt_thread(prompt, add_log)
+
+    send_btn_home = tb.Button(
+        chat_home, text="Envoyer", command=send_home_prompt, bootstyle="primary"
+    )
+    send_btn_home.pack(side="left", padx=4, pady=4)
+    chat_home.pack(fill="x", padx=7, pady=(0, 8))
+    if not is_openai_configured():
+        prompt_home.config(state="disabled")
+        send_btn_home.config(state="disabled")
     nav["accueil"] = accueil_panel
 
     projet_panel = tb.Frame(content)

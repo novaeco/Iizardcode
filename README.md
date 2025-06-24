@@ -140,7 +140,8 @@ vers sa documentation officielle. Pour les variantes ESP32, utilisez l'option
 ## 🌟 UI & Navigation
 
 - **Barre latérale :** Accueil, Projet, IA, GitHub, Outils
-- **IA** :  
+- **Accueil** : prompt IA rapide
+- **IA** :
     - Liste des agents IA  
     - Créer un agent IA  
     - Paramètres IA globaux (clé API, source, etc.)
