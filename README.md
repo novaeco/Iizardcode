@@ -128,6 +128,13 @@ carte correspondante :
 `esp32` et `esp32_c6` pour les déclinaisons ESP32, `esp32_p4` pour la version
 P4, `raspberry_pi` pour la gamme Raspberry Pi et `bpi` pour Banana Pi.
 
+## 📝 Documentation des cartes
+
+Chaque README dans ces dossiers décrit brièvement la carte concernée et renvoie
+vers sa documentation officielle. Pour les variantes ESP32, utilisez l'option
+**Flash ESP32** dans l'onglet **Projet** de DevCenter ; la fonction
+`flash_esp32()` détecte automatiquement le port grâce à `pyserial`.
+
 ---
 
 ## 🌟 UI & Navigation
