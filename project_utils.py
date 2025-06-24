@@ -133,7 +133,7 @@ def ask_openai(prompt):
     try:
         with open("config.json", "r", encoding="utf-8") as f:
             config = json.load(f)
-        api_key = config.get("openai_api_key")
+        api_key = config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise RuntimeError("Clé API OpenAI manquante")
         openai.api_key = api_key

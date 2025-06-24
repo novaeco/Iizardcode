@@ -1,6 +1,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 import json
+import pytest
 import project_utils
 
 
@@ -62,3 +63,40 @@ def test_save_ia_history(tmp_path, monkeypatch):
         hist = json.load(f)
     assert hist[0]["prompt"] == "p"
     assert hist[0]["response"] == "r"
+
+
+class DummyResp:
+    def __init__(self, content="dummy"):
+        self.choices = [type("c", (), {"message": type("m", (), {"content": content})()})()]
+
+
+class DummyChatCompletion:
+    @staticmethod
+    def create(model, messages):
+        return DummyResp()
+
+
+class DummyOpenAI:
+    api_key = None
+    ChatCompletion = DummyChatCompletion
+
+
+def test_ask_openai_env_fallback(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open("config.json", "w", encoding="utf-8") as f:
+        json.dump({}, f)
+    monkeypatch.setattr(project_utils, "openai", DummyOpenAI)
+    monkeypatch.setenv("OPENAI_API_KEY", "ENVKEY")
+    resp = project_utils.ask_openai("Hello")
+    assert resp == "dummy"
+    assert DummyOpenAI.api_key == "ENVKEY"
+
+
+def test_ask_openai_missing_key(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open("config.json", "w", encoding="utf-8") as f:
+        json.dump({}, f)
+    monkeypatch.setattr(project_utils, "openai", DummyOpenAI)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(RuntimeError):
+        project_utils.ask_openai("Hello")
