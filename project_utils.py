@@ -133,6 +133,15 @@ def save_profile(profile_name="Default"):
     return f"[PROFIL] Profil '{profile_name}' sauvegardé."
 
 
+def load_profile(profile_name="Default"):
+    """Return saved profile data or None if not found."""
+    if not os.path.exists(PROFILES_FILE):
+        return None
+    with open(PROFILES_FILE, "r", encoding="utf-8") as f:
+        profiles = json.load(f)
+    return profiles.get(profile_name)
+
+
 def save_ia_history(prompt, response):
     """Append a question/answer pair to the local history file."""
     history = []

@@ -116,7 +116,9 @@ def test_send_prompt_thread(monkeypatch):
         def start(self):
             events["started"] = True
 
-    monkeypatch.setattr(main_gui, "threading", types.SimpleNamespace(Thread=DummyThread))
+    monkeypatch.setattr(
+        main_gui, "threading", types.SimpleNamespace(Thread=DummyThread)
+    )
 
     main_gui.ia_tab_panel(None, add_log)
     DummyTB.last_entry.value = "hello"
