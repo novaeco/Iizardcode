@@ -20,10 +20,12 @@ from project_utils import (
     reset_git,
     save_profile,
     load_profile,
+
     list_profiles,
     load_config,
     save_config,
     HIST_FILE,
+
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -698,6 +700,7 @@ def run_app():
         else:
             profiles_var.set("")
 
+
     tb.Button(
         projet_panel,
         text="💾 Sauver Profil",
@@ -718,6 +721,7 @@ def run_app():
         projet_panel, text="📂 Charger Profil", command=load_selected_profile
     ).pack(fill="x", padx=120, pady=3)
     refresh_profiles()
+
     tb.Button(
         projet_panel, text="🧹 Réinitialiser Git", command=lambda: add_log(reset_git())
     ).pack(fill="x", padx=120, pady=3)
