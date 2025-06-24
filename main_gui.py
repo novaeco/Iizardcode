@@ -20,6 +20,12 @@ from project_utils import (
     reset_git,
     save_profile,
     load_profile,
+ uq02yo-codex/analyser-le-dépôt-et-proposer-des-améliorations
+    list_profiles,
+    load_config,
+    save_config,
+    HIST_FILE,
+n
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -399,6 +405,21 @@ def ia_tab_panel(parent, add_log):
         tb.Label(
             body, text="Paramètres de tous les agents IA", font=("Segoe UI", 14, "bold")
         ).pack(pady=7)
+
+        def show_history():
+            top = tb.Toplevel(frame)
+            top.title("Historique IA")
+            box = scrolledtext.ScrolledText(top, width=80, height=20)
+            box.pack(fill="both", expand=True, padx=10, pady=10)
+            if os.path.exists(HIST_FILE):
+                with open(HIST_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for item in data:
+                    box.insert("end", f"> {item['prompt']}\n{item['response']}\n\n")
+            else:
+                box.insert("end", "Aucun historique.")
+            box.config(state="disabled")
+
         for idx, ag in enumerate(agents):
             param_frame = tb.Labelframe(
                 body, text=f"{ag['icon']} {ag['name']}", bootstyle="warning"
@@ -434,6 +455,10 @@ def ia_tab_panel(parent, add_log):
                 command=save,
                 bootstyle="success-outline",
             ).grid(row=0, column=6, padx=8)
+
+        tb.Button(body, text="📜 Voir historique IA", command=show_history).pack(
+            pady=12
+        )
 
     def refresh_body():
         if section.get() == "agents":
@@ -533,6 +558,7 @@ def run_app():
         ("🤖 IA", lambda: show_panel("ia")),
         ("🌐 GitHub", lambda: show_panel("git")),
         ("⚙️ Outils", lambda: show_panel("tools")),
+        ("🔧 Paramètres", lambda: show_panel("settings")),
     ]
     for txt, cmd in nav_btns:
         tb.Button(
@@ -664,9 +690,38 @@ def run_app():
         command=choose_and_flash,
         bootstyle="warning-outline",
     ).pack(fill="x", padx=120, pady=3)
+    profiles_var = tb.StringVar()
+
+    def refresh_profiles():
+        profs = list_profiles()
+        profiles_box.configure(values=profs)
+        if profs:
+            profiles_var.set(profs[0])
+        else:
+            profiles_var.set("")
+
     tb.Button(
-        projet_panel, text="💾 Sauver Profil", command=lambda: add_log(save_profile())
+        projet_panel,
+        text="💾 Sauver Profil",
+        command=lambda: (add_log(save_profile()), refresh_profiles()),
     ).pack(fill="x", padx=120, pady=3)
+
+    def load_selected_profile():
+        name = profiles_var.get() or "Default"
+        prof = load_profile(name)
+        if prof is None:
+            messagebox.showinfo("Profil", "Aucun profil sauvegardé")
+        else:
+            messagebox.showinfo("Profil", f"Profil '{name}' chargé : {prof}")
+
+    profiles_box = tb.Combobox(projet_panel, textvariable=profiles_var)
+    profiles_box.pack(fill="x", padx=120, pady=3)
+    tb.Button(
+        projet_panel, text="📂 Charger Profil", command=load_selected_profile
+    ).pack(fill="x", padx=120, pady=3)
+
+    refresh_profiles()
+
 
     def load_selected_profile():
         prof = load_profile()
@@ -678,6 +733,7 @@ def run_app():
     tb.Button(
         projet_panel, text="📂 Charger Profil", command=load_selected_profile
     ).pack(fill="x", padx=120, pady=3)
+
     tb.Button(
         projet_panel, text="🧹 Réinitialiser Git", command=lambda: add_log(reset_git())
     ).pack(fill="x", padx=120, pady=3)
@@ -713,6 +769,30 @@ def run_app():
         font=("Segoe UI", 11, "italic"),
     ).pack()
     nav["tools"] = tools_panel
+
+    settings_panel = tb.Frame(content)
+    tb.Label(settings_panel, text="⚙️ Paramètres", font=("Segoe UI", 15, "bold")).pack(
+        pady=14
+    )
+    cfg = load_config()
+    tb.Label(settings_panel, text="Clé API OpenAI :").pack(anchor="w", padx=20)
+    api_var = tb.StringVar(value=cfg.get("openai_api_key", ""))
+    tb.Entry(settings_panel, textvariable=api_var, show="*").pack(
+        fill="x", padx=20, pady=4
+    )
+    tb.Label(settings_panel, text="URL dépôt GitHub :").pack(anchor="w", padx=20)
+    repo_var = tb.StringVar(value=cfg.get("github_repo_url", ""))
+    tb.Entry(settings_panel, textvariable=repo_var).pack(fill="x", padx=20, pady=4)
+
+    def save_cfg():
+        new_cfg = {"openai_api_key": api_var.get(), "github_repo_url": repo_var.get()}
+        add_log(save_config(new_cfg))
+        messagebox.showinfo("Paramètres", "Configuration sauvegardée")
+
+    tb.Button(
+        settings_panel, text="Enregistrer", command=save_cfg, bootstyle="success"
+    ).pack(pady=10)
+    nav["settings"] = settings_panel
 
     # Affichage initial
     show_panel("accueil")

@@ -11,6 +11,7 @@ import webbrowser
 PROFILES_FILE = "profiles.json"
 HIST_FILE = "historique_ia.json"
 OPENAPI_FILE = "openapi.json"
+CONFIG_FILE = "config.json"
 
 
 def generate_project():
@@ -140,6 +141,28 @@ def load_profile(profile_name="Default"):
     with open(PROFILES_FILE, "r", encoding="utf-8") as f:
         profiles = json.load(f)
     return profiles.get(profile_name)
+
+def list_profiles():
+    """Return the list of saved profile names."""
+    if not os.path.exists(PROFILES_FILE):
+        return []
+    with open(PROFILES_FILE, "r", encoding="utf-8") as f:
+        return list(json.load(f).keys())
+
+
+def load_config():
+    """Load configuration from CONFIG_FILE or return empty dict."""
+    if not os.path.exists(CONFIG_FILE):
+        return {}
+    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_config(cfg):
+    """Write configuration dictionary to CONFIG_FILE."""
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+    return "[OK] Config sauvegardée."
 
 
 def save_ia_history(prompt, response):
