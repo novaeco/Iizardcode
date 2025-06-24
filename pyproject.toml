@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devcenter"
+version = "0.1.0"
+description = "DevCenter PRO – project management and automation toolkit"
+authors = [{name="NovaDevSysthem"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+dependencies = [
+    "ttkbootstrap",
+    "pyserial",
+    "openai"
+]
+
+[project.scripts]
+devcenter = "main_gui:run_app"
+
+[tool.setuptools]
+py-modules = ["main_gui", "project_utils", "hardware"]

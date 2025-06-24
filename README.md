@@ -56,6 +56,21 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
     ```
 La détection automatique du port COM pour ESP32 fonctionne grâce au paquet `pyserial` déjà listé dans `requirements.txt`.
 
+### Via `pip` (pyproject)
+Pour installer DevCenter comme un paquet Python :
+```bash
+pip install .
+devcenter
+```
+
+### Générer un exécutable
+Avec PyInstaller :
+```bash
+pip install pyinstaller
+pyinstaller --noconfirm --onefile --windowed main_gui.py
+```
+Un script `build_exe.bat` est fourni pour Windows.
+
 ## 🔑 Configuration de la clé API OpenAI
 
 Renseigne la clé dans `config.json` :
