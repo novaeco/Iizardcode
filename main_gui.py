@@ -470,7 +470,9 @@ def run_app():
     app = tb.Window(themename=themename)
     app.title("DevCenter PRO – Ultimate UI")
     app.geometry("1320x820")
-    app.iconbitmap("logo.ico")  # Icône personnalisée
+    icon_path = os.path.join(BASE_DIR, "logo.ico")
+    if os.path.exists(icon_path):
+        app.iconbitmap(icon_path)  # Icône personnalisée
 
     # Theme switcher
     def set_theme(theme):
