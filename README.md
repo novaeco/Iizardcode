@@ -139,17 +139,19 @@ vers sa documentation officielle. Pour les variantes ESP32, utilisez l'option
 
 ## 🌟 UI & Navigation
 
-- **Barre latérale :** Accueil, Projet, IA, GitHub, Outils
+- **Barre latérale :** Accueil, Projet, IA, GitHub, Outils, Paramètres
 - **Accueil** : prompt IA rapide
 - **IA** :
-    - Liste des agents IA  
-    - Créer un agent IA  
+    - Liste des agents IA
+    - Créer un agent IA
     - Paramètres IA globaux (clé API, source, etc.)
-- **Projet** :  
+    - Historique des discussions IA
+- **Projet** :
     - Générer sources, .code-workspace, README, OpenAPI, etc.
     - Flasher ESP32 (auto COM)
-    - Gestion multi-profil
+    - Gestion multi-profil (chargement/sauvegarde)
     - Réinitialisation Git, push, actions CI/CD…
+- **Paramètres** : configuration clé API et URL GitHub
 - **Logs live** pour tout voir
 
 ---

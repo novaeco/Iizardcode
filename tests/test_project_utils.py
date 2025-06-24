@@ -57,6 +57,20 @@ def test_save_profile(tmp_path, monkeypatch):
     assert "Test" in profiles
 
 
+def test_list_profiles(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open(project_utils.PROFILES_FILE, "w", encoding="utf-8") as f:
+        json.dump({"A": {}, "B": {}}, f)
+    assert sorted(project_utils.list_profiles()) == ["A", "B"]
+
+
+def test_load_profile_none(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with open(project_utils.PROFILES_FILE, "w", encoding="utf-8") as f:
+        json.dump({"A": {}}, f)
+    assert project_utils.load_profile("B") is None
+
+
 def test_save_ia_history(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     project_utils.save_ia_history("p", "r")
@@ -190,6 +204,13 @@ def test_open_github_repo(monkeypatch, tmp_path):
     msg = project_utils.open_github_repo()
     assert msg == "[GIT] Ouverture page GitHub."
     assert opened == ["http://ex"]
+
+
+def test_save_load_config(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    msg = project_utils.save_config({"x": 1})
+    assert msg.startswith("[OK]")
+    assert project_utils.load_config() == {"x": 1}
 
 
 def test_ask_openai_success(tmp_path, monkeypatch):
