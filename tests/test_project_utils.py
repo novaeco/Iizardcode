@@ -1,4 +1,5 @@
 import sys, os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 import json
 import pytest
@@ -67,7 +68,9 @@ def test_save_ia_history(tmp_path, monkeypatch):
 
 class DummyResp:
     def __init__(self, content="dummy"):
-        self.choices = [type("c", (), {"message": type("m", (), {"content": content})()})()]
+        self.choices = [
+            type("c", (), {"message": type("m", (), {"content": content})()})()
+        ]
 
 
 class DummyChatCompletion:
@@ -104,6 +107,7 @@ def test_ask_openai_missing_key(tmp_path, monkeypatch):
 
 def _patch_serial(monkeypatch, ports):
     import types
+
     lp = types.SimpleNamespace(comports=lambda: ports)
     tools = types.SimpleNamespace(list_ports=lp)
     serial_mod = types.SimpleNamespace(tools=tools)
@@ -113,7 +117,9 @@ def _patch_serial(monkeypatch, ports):
 
 
 def test_detect_com_found(monkeypatch):
-    class Port: device = "COM1"
+    class Port:
+        device = "COM1"
+
     _patch_serial(monkeypatch, [Port()])
     port, msg = project_utils.detect_com()
     assert port == "COM1"
@@ -128,7 +134,9 @@ def test_detect_com_missing(monkeypatch):
 
 
 def test_flash_esp32(monkeypatch):
-    class Port: device = "COM3"
+    class Port:
+        device = "COM3"
+
     _patch_serial(monkeypatch, [Port()])
     res = project_utils.flash_esp32()
     assert res == "[FLASH] (Fake) Flash ESP32 sur COM3"
@@ -162,7 +170,9 @@ def test_open_github_repo(monkeypatch, tmp_path):
     with open("config.json", "w", encoding="utf-8") as f:
         json.dump({"github_repo_url": "http://ex"}, f)
     opened = []
-    monkeypatch.setattr(project_utils.webbrowser, "open", lambda url: opened.append(url))
+    monkeypatch.setattr(
+        project_utils.webbrowser, "open", lambda url: opened.append(url)
+    )
     msg = project_utils.open_github_repo()
     assert msg == "[GIT] Ouverture page GitHub."
     assert opened == ["http://ex"]
@@ -172,12 +182,16 @@ def test_ask_openai_success(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with open("config.json", "w", encoding="utf-8") as f:
         json.dump({"openai_api_key": "KEY"}, f)
+
     class Dummy(DummyOpenAI):
         pass
+
     called = []
+
     def create(model, messages):
         called.append(messages[0]["content"])
         return DummyResp("resp")
+
     Dummy.ChatCompletion.create = staticmethod(create)
     monkeypatch.setattr(project_utils, "openai", Dummy)
     resp = project_utils.ask_openai("Hi")
