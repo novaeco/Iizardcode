@@ -65,23 +65,30 @@ def generate_changelog():
 
 
 def detect_com():
-    """Return the first available serial port if any."""
+    """Return the list of available serial ports."""
     try:
         import serial.tools.list_ports
 
-        ports = list(serial.tools.list_ports.comports())
+        ports = [p.device for p in serial.tools.list_ports.comports()]
         if not ports:
-            return None, "[ERR] Aucun port COM détecté"
-        return ports[0].device, f"[OK] Port détecté : {ports[0].device}"
+            return [], "[ERR] Aucun port COM détecté"
+        if len(ports) == 1:
+            return ports, f"[OK] Port détecté : {ports[0]}"
+        return ports, "[OK] Ports détectés : " + ", ".join(ports)
     except Exception as e:
-        return None, f"[ERR] pyserial absent ou erreur : {e}"
+        return [], f"[ERR] pyserial absent ou erreur : {e}"
 
 
-def flash_esp32():
+def flash_esp32(port=None):
     """Fake flashing of an ESP32 using the detected port."""
-    port, log = detect_com()
-    if not port:
+    ports, log = detect_com()
+    if not ports:
         return log
+    if port is None:
+        if len(ports) == 1:
+            port = ports[0]
+        else:
+            return f"[ERR] Plusieurs ports disponibles : {', '.join(ports)}"
     return f"[FLASH] (Fake) Flash ESP32 sur {port}"
 
 

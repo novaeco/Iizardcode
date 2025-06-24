@@ -121,15 +121,15 @@ def test_detect_com_found(monkeypatch):
         device = "COM1"
 
     _patch_serial(monkeypatch, [Port()])
-    port, msg = project_utils.detect_com()
-    assert port == "COM1"
+    ports, msg = project_utils.detect_com()
+    assert ports == ["COM1"]
     assert "[OK] Port détecté : COM1" == msg
 
 
 def test_detect_com_missing(monkeypatch):
     _patch_serial(monkeypatch, [])
-    port, msg = project_utils.detect_com()
-    assert port is None
+    ports, msg = project_utils.detect_com()
+    assert ports == []
     assert msg.startswith("[ERR] Aucun port COM")
 
 
@@ -146,6 +146,20 @@ def test_flash_esp32_no_port(monkeypatch):
     _patch_serial(monkeypatch, [])
     res = project_utils.flash_esp32()
     assert res.startswith("[ERR] Aucun port COM")
+
+
+def test_flash_esp32_multiple(monkeypatch):
+    class P1:
+        device = "COM1"
+
+    class P2:
+        device = "COM2"
+
+    _patch_serial(monkeypatch, [P1(), P2()])
+    res = project_utils.flash_esp32()
+    assert res.startswith("[ERR] Plusieurs ports")
+    res = project_utils.flash_esp32(port="COM2")
+    assert res == "[FLASH] (Fake) Flash ESP32 sur COM2"
 
 
 def test_reset_git(monkeypatch, tmp_path):
