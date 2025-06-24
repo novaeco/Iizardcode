@@ -25,13 +25,16 @@ Développé par **NovaDevSysthem** avec l’assistance d’agents IA sur-mesure.
 
 ## 🏷️ Personnalisation
 
-- **Logo personnalisable** :  
+- **Logo personnalisable** :
     - Remplace `logo.ico` par ton icône, ou modifie la ligne dans `main_gui.py` :  
       ```python
       app.iconbitmap('logo.ico')  # Change le nom ici si besoin
       ```
     - Ajoute un logo dans le README via `![Logo](tonlogo.png)` si tu préfères un PNG (et update le chemin)
-- **Branding** :  
+- **Image de démo des polices** :
+    - `img-font.png` est affiché dans l'application (accueil & barre latérale).
+      Remplace-le par ton propre fichier si tu souhaites personnaliser l'image.
+- **Branding** :
     - Change la bannière de l’UI dans `main_gui.py`  
     - Ajoute ton nom dans le footer, et dans ce README  
     - Personnalise l’URL du dépôt via `github_repo_url` dans `config.json` pour le bouton "Ouvrir Page GitHub"
