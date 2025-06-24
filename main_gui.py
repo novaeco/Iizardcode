@@ -429,11 +429,15 @@ def ia_tab_panel(parent, add_log):
         if not prompt:
             messagebox.showwarning("Prompt vide", "Saisissez un prompt.")
             return
-        try:
-            response = ask_openai(prompt)
-            add_log(f"[IA] {response}")
-        except Exception as e:
-            add_log(str(e))
+
+        def worker():
+            try:
+                response = ask_openai(prompt)
+                add_log(f"[IA] {response}")
+            except Exception as e:
+                add_log(str(e))
+
+        threading.Thread(target=worker, daemon=True).start()
 
     tb.Button(
         chat_frame, text="Envoyer", command=send_prompt, bootstyle="primary"
