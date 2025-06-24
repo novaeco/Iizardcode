@@ -47,3 +47,15 @@ def test_send_serial_command_ok(monkeypatch):
 def test_send_serial_command_no_port(monkeypatch):
     patch_serial(monkeypatch, [], DummySerial)
     assert hardware.send_serial_command("AT") is False
+
+
+def test_send_serial_command_with_port(monkeypatch):
+    serial_inst = DummySerial("COMZ", 9600, 2)
+
+    class _Serial(DummySerial):
+        def __new__(cls, *a, **kw):
+            return serial_inst
+
+    patch_serial(monkeypatch, [], _Serial)
+    assert hardware.send_serial_command("AT", port="COMZ") is True
+    assert serial_inst.written == [b"AT\n"]

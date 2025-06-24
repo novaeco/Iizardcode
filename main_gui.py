@@ -9,6 +9,7 @@ import threading
 from project_utils import (
     ask_openai,
     flash_esp32,
+    detect_com,
     generate_changelog,
     generate_openapi,
     generate_project,
@@ -534,6 +535,31 @@ def run_app():
         log_box.config(state="disabled")
         log_box.see("end")
 
+    def choose_and_flash():
+        ports, log = detect_com()
+        if not ports:
+            add_log(log)
+            return
+        if len(ports) == 1:
+            add_log(flash_esp32(ports[0]))
+            return
+
+        top = tb.Toplevel(app)
+        top.title("Choisir le port")
+        tb.Label(top, text="Port série :").pack(padx=10, pady=5)
+        box = tb.Combobox(top, values=ports, width=15)
+        box.pack(padx=10, pady=5)
+        box.set(ports[0])
+
+        def do_flash():
+            port = box.get()
+            add_log(flash_esp32(port))
+            top.destroy()
+
+        tb.Button(top, text="Flasher", command=do_flash, bootstyle="warning").pack(
+            pady=8
+        )
+
     # PANELS
     accueil_panel = tb.Frame(content)
     tb.Label(
@@ -578,8 +604,8 @@ def run_app():
     ).pack(fill="x", padx=120, pady=3)
     tb.Button(
         projet_panel,
-        text="⚡ Flasher ESP32 (auto COM)",
-        command=lambda: add_log(flash_esp32()),
+        text="⚡ Flasher ESP32",
+        command=choose_and_flash,
         bootstyle="warning-outline",
     ).pack(fill="x", padx=120, pady=3)
     tb.Button(
