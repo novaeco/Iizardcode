@@ -13,6 +13,7 @@ OPENAPI_FILE = "openapi.json"
 
 
 def generate_project():
+    """Create a minimal source tree with a stub main file and README."""
     os.makedirs("src", exist_ok=True)
     with open("src/main.c", "w") as f:
         f.write("// Entry point du projet généré\nint main() { return 0; }\n")
@@ -34,6 +35,7 @@ def generate_readme():
 
 
 def generate_workspace():
+    """Write a VS Code workspace file for the current project."""
     ws = {"folders": [{"path": "."}], "settings": {}}
     with open(".code-workspace", "w", encoding="utf-8") as f:
         json.dump(ws, f, indent=2)
@@ -41,6 +43,7 @@ def generate_workspace():
 
 
 def generate_openapi():
+    """Create a very small OpenAPI skeleton file."""
     openapi = {
         "openapi": "3.0.0",
         "info": {"title": "DevCenter API", "version": "1.0.0"},
@@ -52,6 +55,7 @@ def generate_openapi():
 
 
 def generate_changelog():
+    """Append today's entry to CHANGELOG and update version.txt."""
     with open("CHANGELOG.md", "a", encoding="utf-8") as f:
         f.write(f"\n## {datetime.date.today()} - Projet généré/modifié\n")
     with open("version.txt", "w", encoding="utf-8") as v:
@@ -60,6 +64,7 @@ def generate_changelog():
 
 
 def detect_com():
+    """Return the first available serial port if any."""
     try:
         import serial.tools.list_ports
         ports = list(serial.tools.list_ports.comports())
@@ -71,6 +76,7 @@ def detect_com():
 
 
 def flash_esp32():
+    """Fake flashing of an ESP32 using the detected port."""
     port, log = detect_com()
     if not port:
         return log
@@ -78,6 +84,7 @@ def flash_esp32():
 
 
 def reset_git():
+    """Remove any existing Git repository and reinitialise it."""
     if os.path.isdir(".git"):
         import shutil
         shutil.rmtree(".git")
@@ -86,6 +93,7 @@ def reset_git():
 
 
 def push_github():
+    """Placeholder for pushing the project to GitHub."""
     return "[GIT] Simu push (à brancher sur Git réel)"
 
 
@@ -104,6 +112,7 @@ def open_github_repo(url=None):
 
 
 def save_profile(profile_name="Default"):
+    """Persist simple metadata about the current user profile."""
     profiles = {}
     if os.path.exists(PROFILES_FILE):
         with open(PROFILES_FILE, "r", encoding="utf-8") as f:
@@ -117,6 +126,7 @@ def save_profile(profile_name="Default"):
 
 
 def save_ia_history(prompt, response):
+    """Append a question/answer pair to the local history file."""
     history = []
     if os.path.exists(HIST_FILE):
         with open(HIST_FILE, "r", encoding="utf-8") as f:

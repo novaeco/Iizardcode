@@ -1,5 +1,7 @@
 # hardware.py
+
 def send_serial_command(cmd, baud=115200):
+    """Send a command to the first detected serial port."""
     try:
         import serial.tools.list_ports
         ports = list(serial.tools.list_ports.comports())
